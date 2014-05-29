@@ -39,4 +39,4 @@ if [[ -d "$OVERRIDE/$THEMES" ]]; then
   done
 fi
 
-npm start
+npm start --production
