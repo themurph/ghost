@@ -1,5 +1,6 @@
 // # Ghost Configuration
 // Setup your Ghost install for various environments
+// Documentation can be found at http://docs.ghost.org/usage/configuration/
 
 var path = require('path'),
     config;
@@ -37,6 +38,9 @@ config = {
             host: '127.0.0.1',
             // Port to be passed to node's `net.Server#listen()`, for iisnode set this to `process.env.PORT`
             port: '2368'
+        },
+        paths: {
+            contentPath: path.join(__dirname, '/content/')
         }
     },
 
@@ -44,25 +48,20 @@ config = {
     // When running Ghost in the wild, use the production environment
     // Configure your URL and mail settings here
     production: {
-        url: 'http://'+process.env.OPENSHIFT_APP_DNS,
+        url: 'http://54.88.37.231',
         mail: {},
         database: {
-            client: 'mysql',
+            client: 'sqlite3',
             connection: {
-  			  host: process.env.OPENSHIFT_MYSQL_DB_HOST,
-			  port: process.env.OPENSHIFT_MYSQL_DB_PORT,
-  			  user: process.env.OPENSHIFT_MYSQL_DB_USERNAME,
-  			  password: process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
-  			  database: process.env.OPENSHIFT_APP_NAME,
-  			  charset: 'utf8'
+                filename: path.join(__dirname, '/content/data/ghost.db')
             },
             debug: false
         },
         server: {
             // Host to be passed to node's `net.Server#listen()`
-            host: process.env.OPENSHIFT_NODEJS_IP,
+            host: '127.0.0.1',
             // Port to be passed to node's `net.Server#listen()`, for iisnode set this to `process.env.PORT`
-            port: process.env.OPENSHIFT_NODEJS_PORT
+            port: '2368'
         }
     },
 
@@ -82,48 +81,34 @@ config = {
         server: {
             host: '127.0.0.1',
             port: '2369'
-        }
-    },
-
-    // ### Travis
-    // Automated testing run through GitHub
-    'travis-sqlite3': {
-        url: 'http://127.0.0.1:2369',
-        database: {
-            client: 'sqlite3',
-            connection: {
-                filename: path.join(__dirname, '/content/data/ghost-travis.db')
-            }
         },
-        server: {
-            host: '127.0.0.1',
-            port: '2369'
-        }
+        logging: false
     },
 
-    // ### Travis
-    // Automated testing run through GitHub
-    'travis-mysql': {
+    // ### Testing MySQL
+    // Used by Travis - Automated testing run through GitHub
+    'testing-mysql': {
         url: 'http://127.0.0.1:2369',
         database: {
             client: 'mysql',
             connection: {
                 host     : '127.0.0.1',
-                user     : 'travis',
+                user     : 'root',
                 password : '',
-                database : 'ghost_travis',
+                database : 'ghost_testing',
                 charset  : 'utf8'
             }
         },
         server: {
             host: '127.0.0.1',
             port: '2369'
-        }
+        },
+        logging: false
     },
 
-    // ### Travis
-    // Automated testing run through GitHub
-    'travis-pg': {
+    // ### Testing pg
+    // Used by Travis - Automated testing run through GitHub
+    'testing-pg': {
         url: 'http://127.0.0.1:2369',
         database: {
             client: 'pg',
@@ -131,14 +116,15 @@ config = {
                 host     : '127.0.0.1',
                 user     : 'postgres',
                 password : '',
-                database : 'ghost_travis',
+                database : 'ghost_testing',
                 charset  : 'utf8'
             }
         },
         server: {
             host: '127.0.0.1',
             port: '2369'
-        }
+        },
+        logging: false
     }
 };
 
